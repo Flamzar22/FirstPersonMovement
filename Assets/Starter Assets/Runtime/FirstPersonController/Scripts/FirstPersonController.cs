@@ -43,6 +43,11 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
+		[Header("Shooting")]
+		public GameObject bulletPrefab;
+		public float bulletForce;
+
+
 		[Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
 		public GameObject CinemachineCameraTarget;
@@ -71,7 +76,7 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
-
+		private Transform gun;
 		private const float _threshold = 0.01f;
 
 		private bool IsCurrentDeviceMouse
@@ -101,6 +106,7 @@ namespace StarterAssets
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
 			_playerInput = GetComponent<PlayerInput>();
+			gun = GameObject.FindGameObjectWithTag("Gun").transform;
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -113,6 +119,7 @@ namespace StarterAssets
 		private void Update()
 		{
 			JumpAndGravity();
+			Shoot();
 			GroundedCheck();
 			Move();
 		}
@@ -120,6 +127,17 @@ namespace StarterAssets
 		private void LateUpdate()
 		{
 			CameraRotation();
+		}
+
+		private void Shoot()
+		{
+			if (_input.shoot)
+			{
+				GameObject newBullet = Instantiate(bulletPrefab, gun.position, Quaternion.identity);
+				newBullet.GetComponent<Rigidbody>().AddForce(gun.forward * bulletForce,ForceMode.Impulse);
+				Destroy(newBullet, 5f);
+				_input.shoot = false;
+			}
 		}
 
 		private void GroundedCheck()
