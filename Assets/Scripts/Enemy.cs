@@ -6,13 +6,14 @@ public class Enemy : MonoBehaviour
 {
     public float health;
     private float maxHealth;
+    public float damage;
     public Image healthBar;
     private NavMeshAgent agent;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        InvokeRepeating("FindPlayer", 1f, 0.5f);
+        InvokeRepeating("FindPlayer", 1f, 0.5f);    
         maxHealth = health;
     }
     private void OnCollisionEnter(Collision collision)
