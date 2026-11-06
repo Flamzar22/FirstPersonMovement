@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - Gun
   - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
